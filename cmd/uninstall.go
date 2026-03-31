@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/gnugnu/wzmux/internal/config"
-	"github.com/gnugnu/wzmux/internal/status"
+	"github.com/gnu-gnu/wzmux/internal/config"
+	"github.com/gnu-gnu/wzmux/internal/status"
 	"github.com/spf13/cobra"
 )
 

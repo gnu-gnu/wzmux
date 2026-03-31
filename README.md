@@ -20,13 +20,13 @@ Claude Code 에이전트를 WezTerm 탭으로 실행, 모니터링, 관리하는
 ## 설치
 
 ```bash
-go install github.com/gnugnu/wzmux@latest
+go install github.com/gnu-gnu/wzmux@latest
 ```
 
 소스에서 빌드:
 
 ```bash
-git clone https://github.com/gnugnu/wzmux.git
+git clone https://github.com/gnu-gnu/wzmux.git
 cd wzmux
 go install .
 ```

@@ -1,4 +1,4 @@
-module github.com/gnugnu/wzmux
+module github.com/gnu-gnu/wzmux
 
 go 1.25.0
 

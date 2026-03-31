@@ -20,13 +20,13 @@ WezTerm multiplexer for Claude Code. Launch, monitor, and manage multiple Claude
 ## Install
 
 ```bash
-go install github.com/gnugnu/wzmux@latest
+go install github.com/gnu-gnu/wzmux@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/gnugnu/wzmux.git
+git clone https://github.com/gnu-gnu/wzmux.git
 cd wzmux
 go install .
 ```

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gnugnu/wzmux/internal/wezterm"
+	"github.com/gnu-gnu/wzmux/internal/wezterm"
 	"github.com/spf13/cobra"
 )
 

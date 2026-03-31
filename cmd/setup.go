@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/gnugnu/wzmux/internal/config"
+	"github.com/gnu-gnu/wzmux/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 	fmt.Println("Registered events: PreToolUse, PostToolUse, Stop, Notification")
 	fmt.Println()
 	fmt.Println("Optional: Add WezTerm status bar integration to your wezterm.lua.")
-	fmt.Println("See: https://github.com/gnugnu/wzmux#wezterm-integration")
+	fmt.Println("See: https://github.com/gnu-gnu/wzmux#wezterm-integration")
 
 	return nil
 }

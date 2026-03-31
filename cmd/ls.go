@@ -5,8 +5,8 @@ import (
 	"text/tabwriter"
 	"os"
 
-	"github.com/gnugnu/wzmux/internal/status"
-	"github.com/gnugnu/wzmux/internal/wezterm"
+	"github.com/gnu-gnu/wzmux/internal/status"
+	"github.com/gnu-gnu/wzmux/internal/wezterm"
 	"github.com/spf13/cobra"
 )
 

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/gnugnu/wzmux/cmd"
+import "github.com/gnu-gnu/wzmux/cmd"
 
 func main() {
 	cmd.Execute()
