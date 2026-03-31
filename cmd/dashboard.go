@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var watchPaneID int
+
 var dashboardCmd = &cobra.Command{
 	Use:     "dashboard",
 	Aliases: []string{"dash"},
@@ -95,9 +97,10 @@ func statusOrder(s string) int {
 type tickMsg time.Time
 
 type model struct {
-	agents []agent
-	width  int
-	height int
+	agents    []agent
+	width     int
+	height    int
+	watchPane int // if > 0, quit when this pane disappears
 }
 
 func tickEvery(d time.Duration) tea.Cmd {
@@ -138,9 +141,23 @@ func collectAgents() []agent {
 	return agents
 }
 
+func paneExists(paneID int) bool {
+	panes, err := wezterm.List()
+	if err != nil {
+		return true // assume exists on error
+	}
+	for _, p := range panes {
+		if p.PaneID == paneID {
+			return true
+		}
+	}
+	return false
+}
+
 func initialModel() model {
 	return model{
-		agents: collectAgents(),
+		agents:    collectAgents(),
+		watchPane: watchPaneID,
 	}
 }
 
@@ -169,6 +186,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 
 	case tickMsg:
+		if m.watchPane > 0 && !paneExists(m.watchPane) {
+			return m, tea.Quit
+		}
 		m.agents = collectAgents()
 		return m, tickEvery(2 * time.Second)
 	}
@@ -246,5 +266,6 @@ func runDashboard(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
+	dashboardCmd.Flags().IntVar(&watchPaneID, "watch-pane", 0, "Exit when this pane disappears")
 	rootCmd.AddCommand(dashboardCmd)
 }

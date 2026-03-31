@@ -43,7 +43,7 @@ func runNew(cmd *cobra.Command, args []string) error {
 	cwd, _ := os.Getwd()
 
 	// Build claude command
-	claudeArgs := []string{"claude", "--session-id", sessionID}
+	claudeArgs := []string{"claude", "--name", sessionID}
 	if len(args) > 1 {
 		prompt := strings.Join(args[1:], " ")
 		claudeArgs = append(claudeArgs, "-p", prompt)
@@ -58,10 +58,10 @@ func runNew(cmd *cobra.Command, args []string) error {
 	// Set tab title with robot emoji
 	wezterm.SetTabTitle(paneID, "🤖 "+name)
 
-	// Try to spawn dashboard in a right split
+	// Try to spawn dashboard in a right split, watching the agent pane
 	self, err := os.Executable()
 	if err == nil {
-		wezterm.SplitPane(paneID, 25, self, "dashboard")
+		wezterm.SplitPane(paneID, 25, self, "dashboard", "--watch-pane", fmt.Sprintf("%d", paneID))
 	}
 
 	fmt.Printf("Agent '%s' launched (session: %s, pane %d)\n", name, sessionID, paneID)

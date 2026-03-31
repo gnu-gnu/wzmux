@@ -31,7 +31,7 @@ func runResume(cmd *cobra.Command, args []string) error {
 
 	self, err := os.Executable()
 	if err == nil {
-		wezterm.SplitPane(paneID, 25, self, "dashboard")
+		wezterm.SplitPane(paneID, 25, self, "dashboard", "--watch-pane", fmt.Sprintf("%d", paneID))
 	}
 
 	fmt.Printf("Agent '%s' resumed (session: %s, pane %d)\n", name, sessionID, paneID)
