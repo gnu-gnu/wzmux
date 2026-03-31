@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gnu-gnu/wzmux/internal/session"
 	"github.com/gnu-gnu/wzmux/internal/wezterm"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +20,11 @@ func runResume(cmd *cobra.Command, args []string) error {
 	name := args[0]
 	sessionID := "wzmux-" + name
 	cwd, _ := os.Getwd()
+
+	// Use stored CWD from previous session if available
+	if entry, err := session.Load(name); err == nil && entry.CWD != "" {
+		cwd = entry.CWD
+	}
 
 	claudeArgs := []string{"claude", "--resume", sessionID}
 

@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"text/tabwriter"
 	"os"
+	"text/tabwriter"
+	"time"
 
+	"github.com/gnu-gnu/wzmux/internal/session"
 	"github.com/gnu-gnu/wzmux/internal/status"
 	"github.com/gnu-gnu/wzmux/internal/wezterm"
 	"github.com/spf13/cobra"
@@ -13,7 +15,7 @@ import (
 var lsCmd = &cobra.Command{
 	Use:     "ls",
 	Aliases: []string{"list"},
-	Short:   "List active Claude Code agents",
+	Short:   "List active and inactive Claude Code agents",
 	RunE:    runLs,
 }
 
@@ -23,16 +25,16 @@ func runLs(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if len(agents) == 0 {
-		fmt.Println("No active agents.")
-		return nil
-	}
+	// Collect active agent names
+	activeNames := map[string]bool{}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 4, 2, ' ', 0)
 	fmt.Fprintln(w, "#\tNAME\tSTATUS\tPANE\tCWD")
 
-	for i, p := range agents {
+	idx := 0
+	for _, p := range agents {
 		name := wezterm.AgentName(p)
+		activeNames[name] = true
 		cwd := wezterm.NormalizeCWD(p.CWD)
 
 		st := "unknown"
@@ -40,10 +42,42 @@ func runLs(cmd *cobra.Command, args []string) error {
 			st = s.Status
 		}
 
-		fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", i+1, name, st, p.PaneID, cwd)
+		idx++
+		fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", idx, name, st, p.PaneID, cwd)
 	}
+
+	// Show inactive (previously recorded) sessions
+	sessions, _ := session.List()
+	for _, s := range sessions {
+		if activeNames[s.Name] {
+			continue
+		}
+		age := formatAge(s.CreatedAt)
+		idx++
+		fmt.Fprintf(w, "%d\t%s\t%s\t-\t%s\n", idx, s.Name, "exited ("+age+")", s.CWD)
+	}
+
+	if idx == 0 {
+		fmt.Println("No agents.")
+		return nil
+	}
+
 	w.Flush()
 	return nil
+}
+
+func formatAge(t time.Time) string {
+	d := time.Since(t)
+	switch {
+	case d < time.Minute:
+		return "just now"
+	case d < time.Hour:
+		return fmt.Sprintf("%dm ago", int(d.Minutes()))
+	case d < 24*time.Hour:
+		return fmt.Sprintf("%dh ago", int(d.Hours()))
+	default:
+		return fmt.Sprintf("%dd ago", int(d.Hours()/24))
+	}
 }
 
 func init() {

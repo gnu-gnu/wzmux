@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
+	"github.com/gnu-gnu/wzmux/internal/session"
 	"github.com/gnu-gnu/wzmux/internal/wezterm"
 	"github.com/spf13/cobra"
 )
@@ -63,6 +65,14 @@ func runNew(cmd *cobra.Command, args []string) error {
 	if err == nil {
 		wezterm.SplitPane(paneID, 25, self, "dashboard", "--watch-pane", fmt.Sprintf("%d", paneID))
 	}
+
+	// Record session for later resume
+	session.Save(session.Entry{
+		Name:      name,
+		SessionID: sessionID,
+		CWD:       cwd,
+		CreatedAt: time.Now(),
+	})
 
 	fmt.Printf("Agent '%s' launched (session: %s, pane %d)\n", name, sessionID, paneID)
 	return nil
